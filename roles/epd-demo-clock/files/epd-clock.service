@@ -1,0 +1,17 @@
+[Unit]
+Description=2.7 EPD Clock Display
+Requires=epd-fuse.service
+After=epd-fuse.service
+
+[Service]
+Type=simple
+PrivateDevices=no
+
+WorkingDirectory=/home/pi/gratis/PlatformWithOS/demo
+user=pi
+group=repaper
+
+ExecStart=/usr/bin/python2 Clock27.py
+
+[Install]
+WantedBy=multi-user.target
