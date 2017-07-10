@@ -1,0 +1,43 @@
+---
+- name: create traefik directories
+  file:
+    path: "/etc/traefik/acme"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create traefik.toml
+  template:
+    src: traefik.toml.j2
+    dest: /etc/traefik/traefik.toml
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart traefik
+
+- name: create traefik network
+  docker_network:
+    name: "{{traefik_network}}"
+    state: present
+
+- name: launch traefik container with letsencrypt support
+  docker_container:
+    name: traefik_proxy
+    image: "{{traefik_image}}"
+    state: started
+    restart_policy: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "{{traefik_dashboard_port}}:8080"
+    volumes:
+      - /etc/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - /etc/traefik/acme:/etc/traefik/acme:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    # purge networks so that the container is only part of
+    # {{traefik_network}} (and not the default bridge network)
+    purge_networks: yes
+    networks:
+      - name: "{{traefik_network}}"

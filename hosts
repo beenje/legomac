@@ -1,2 +1,1 @@
-[legomac]
-raspberrypi.local ansible_user=pi
+legomac ansible_user=pi

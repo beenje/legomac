@@ -1,0 +1,4 @@
+---
+traefik_image: beenje/traefik
+aiolegomac_image: beenje/aiolegomac
+pigpiod_image: beenje/pigpiod

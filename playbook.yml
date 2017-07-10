@@ -1,5 +1,8 @@
 ---
-- hosts: legomac
+- hosts: all
   become: yes
   roles:
-    - epd-demo-clock
+    - docker
+    - epd-fuse
+    - traefik
+    - legomac

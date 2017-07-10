@@ -1,0 +1,44 @@
+---
+- name: install requirements
+  apt:
+    name: python-setuptools
+    state: present
+
+- name: check if docker is installed
+  command: docker --version
+  register: docker_cmd
+  failed_when: False
+  changed_when: False
+  check_mode: no
+
+- name: download get-docker.sh
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/get-docker.sh
+    mode: 0755
+  when: docker_cmd.rc != 0
+
+- name: install docker
+  command: /tmp/get-docker.sh
+  when: docker_cmd.rc != 0
+
+- name: remove obsolete python-pip
+  apt:
+    name: python-pip
+    state: absent
+
+- name: install recent pip
+  easy_install:
+    name: pip
+    state: present
+
+- name: install docker-py (docker)
+  pip:
+    name: docker
+    state: present
+
+- name: add pi user to the docker group
+  user:
+    name: pi
+    groups: docker
+    append: yes

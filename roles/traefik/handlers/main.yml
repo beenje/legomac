@@ -1,0 +1,6 @@
+---
+- name: restart traefik
+  docker_container:
+    name: traefik_proxy
+    state: started
+    restart: yes

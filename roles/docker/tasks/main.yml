@@ -1,0 +1,5 @@
+---
+# Install docker
+- include: install.yml
+# Build docker images
+- include: build.yml

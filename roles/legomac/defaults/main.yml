@@ -1,0 +1,9 @@
+---
+aiolegomac_port: 7777
+aiolegomac_network: aiolegomac-network
+aiolegomac_hostname: legomac.example.com
+aiolegomac_username: username
+aiolegomac_password: password
+aiolegomac_jwt_secret: secret
+aiolegomac_jwt_exp_delta_seconds: 604800
+aiolegomac_timezone: 'Europe/Stockholm'

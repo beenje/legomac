@@ -1,0 +1,11 @@
+---
+pigpiod_host: pigpiod
+pigpiod_port: 8888
+host: '0.0.0.0'
+port: {{ aiolegomac_port | int }}
+username: {{ aiolegomac_username }}
+password: {{ aiolegomac_password }}
+jwt_secret: {{ aiolegomac_jwt_secret }}
+jwt_algorithm: 'HS256'
+jwt_exp_delta_seconds: {{ aiolegomac_jwt_exp_delta_seconds | int }}
+timezone: {{ aiolegomac_timezone }}

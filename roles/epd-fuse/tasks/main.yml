@@ -1,0 +1,36 @@
+---
+- name: install required dependencies
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - git
+    - libfuse-dev
+
+- name: check if the epd-fuse service exists
+  command: systemctl status epd-fuse.service
+  check_mode: no
+  failed_when: False
+  changed_when: False
+  register: epd_fuse_service
+
+- name: clone the embeddedartists gratis repository
+  git:
+    repo: https://github.com/embeddedartists/gratis.git
+    dest: /home/pi/gratis
+  when: epd_fuse_service.rc != 0
+
+- name: build the EPD driver and install the epd-fuse service
+  shell: >
+    COG_VERSION=V2 make rpi-epd_fuse &&
+    COG_VERSION=V2 make rpi-install
+  args:
+    chdir: /home/pi/gratis/PlatformWithOS
+  when: epd_fuse_service.rc != 0
+
+- name: ensure the epd-fuse service is enabled and started
+  service:
+    name: epd-fuse
+    state: started
+    enabled: yes

@@ -1,0 +1,60 @@
+---
+- name: create /etc/legomac
+  file:
+    path: /etc/legomac
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
+
+- name: create legomac.yml
+  template:
+    src: legomac.yml.j2
+    dest: /etc/legomac/legomac.yml
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - restart aiolegomac
+
+- name: create aiolegomac network
+  docker_network:
+    name: "{{ aiolegomac_network }}"
+    state: present
+
+- name: launch pigpiod container
+  docker_container:
+    name: pigpiod
+    image: "{{ pigpiod_image }}"
+    state: started
+    restart_policy: always
+    purge_networks: yes
+    privileged: true
+    networks:
+      - name: "{{ aiolegomac_network }}"
+    exposed_ports:
+      - 8888
+
+- name: launch aiolegomac container
+  docker_container:
+    name: aiolegomac
+    image: "{{ aiolegomac_image }}"
+    state: started
+    restart_policy: always
+    purge_networks: yes
+    networks:
+      - name: "{{ aiolegomac_network }}"
+      - name: "{{ traefik_network }}"
+    exposed_ports:
+      - "{{ aiolegomac_port }}"
+    links:
+      - pigpiod
+    volumes:
+      - "/etc/legomac/legomac.yml:/app/config/legomac.yml:ro"
+      - "/dev/epd:/dev/epd"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "aiolegomac"
+      traefik.port: "{{ aiolegomac_port | int }}"
+      traefik.frontend.rule: "Host:{{ aiolegomac_hostname }}"
+      traefik.docker.network: "{{ traefik_network }}"
