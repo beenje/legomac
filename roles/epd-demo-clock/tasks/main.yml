@@ -1,14 +1,13 @@
 ---
 - name: install required dependencies
   apt:
-    name: "{{item}}"
+    name:
+      - git
+      - libfuse-dev
+      - fonts-liberation
+      - python-pil
     state: present
     update_cache: yes
-  with_items:
-    - git
-    - libfuse-dev
-    - fonts-liberation
-    - python-pil
 
 - name: check if the epd-fuse service exists
   command: systemctl status epd-fuse.service
