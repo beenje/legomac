@@ -1,12 +1,11 @@
 ---
 - name: install required dependencies
   apt:
-    name: "{{item}}"
+    name:
+      - git
+      - libfuse-dev
     state: present
     update_cache: yes
-  with_items:
-    - git
-    - libfuse-dev
 
 - name: check if the epd-fuse service exists
   command: systemctl status epd-fuse.service
@@ -19,7 +18,7 @@
   git:
     repo: https://github.com/embeddedartists/gratis.git
     dest: /home/pi/gratis
-  when: epd_fuse_service.rc != 0
+    version: 9b7accc68db23865935b0d90c77a33055483b290
 
 - name: build the EPD driver and install the epd-fuse service
   shell: >
