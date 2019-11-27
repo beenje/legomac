@@ -24,7 +24,7 @@ Roles variables
 
 ::
 
-    traefik_image: beenje/traefik
+    traefik_image: arm32v6/traefik:v1.6
     aiolegomac_image: beenje/aiolegomac
     pigpiod_image: beenje/pigpiod
     traefik_network: traefik-network

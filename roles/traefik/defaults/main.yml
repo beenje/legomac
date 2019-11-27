@@ -1,7 +1,8 @@
 ---
-traefik_image: "beenje/traefik"
+traefik_image: "arm32v6/traefik:v1.6"
 traefik_network: traefik-network
 traefik_debug: "false"
+traefik_send_anonymous_usage: "true"
 # Accepted values, in order of severity: "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"
 traefik_log_level: ERROR
 traefik_dashboard_port: 8080

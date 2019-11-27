@@ -1,22 +1,14 @@
 ---
 - name: install required dependencies
   apt:
-    name: "{{item}}"
+    name: git
     state: present
     update_cache: yes
-  with_items:
-    - git
 
 - name: clone aiolegomac
   git:
     repo: https://github.com/beenje/aiolegomac.git
     dest: /home/pi/aiolegomac
-
-- name: build traefik image
-  docker_image:
-    path: /home/pi/aiolegomac/traefik
-    name: "{{ traefik_image }}"
-    state: present
 
 - name: build aiolegomac image
   docker_image:

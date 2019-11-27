@@ -19,19 +19,19 @@
 
 - name: create traefik network
   docker_network:
-    name: "{{traefik_network}}"
+    name: "{{ traefik_network }}"
     state: present
 
 - name: launch traefik container with letsencrypt support
   docker_container:
     name: traefik_proxy
-    image: "{{traefik_image}}"
+    image: "{{ traefik_image }}"
     state: started
     restart_policy: always
     ports:
       - "80:80"
       - "443:443"
-      - "{{traefik_dashboard_port}}:8080"
+      - "{{ traefik_dashboard_port }}:8080"
     volumes:
       - /etc/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
       - /etc/traefik/acme:/etc/traefik/acme:rw
@@ -40,4 +40,4 @@
     # {{traefik_network}} (and not the default bridge network)
     purge_networks: yes
     networks:
-      - name: "{{traefik_network}}"
+      - name: "{{ traefik_network }}"
