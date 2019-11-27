@@ -1,5 +1,6 @@
 ---
 # Install docker
-- include: install.yml
+- import_tasks: install.yml
+  tags: install-docker
 # Build docker images
-- include: build.yml
+- import_tasks: build.yml

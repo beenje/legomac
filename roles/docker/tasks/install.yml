@@ -1,41 +1,31 @@
 ---
 - name: install requirements
   apt:
-    name: python-setuptools
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - python-docker
     state: present
 
-- name: check if docker is installed
-  command: docker --version
-  register: docker_cmd
-  failed_when: False
-  changed_when: False
-  check_mode: no
+- name: import docker repo gpg key
+  apt_key:
+    url: https://download.docker.com/linux/raspbian/gpg
+    id: 0EBFCD88
+    state: present
 
-- name: download get-docker.sh
-  get_url:
-    url: https://get.docker.com
-    dest: /tmp/get-docker.sh
-    mode: 0755
-  when: docker_cmd.rc != 0
+- name: add docker repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/raspbian/ {{ ansible_distribution_release }} stable
+    state: present
+    filename: docker-raspbian
 
-- name: install docker
-  command: /tmp/get-docker.sh
-  when: docker_cmd.rc != 0
-
-- name: remove obsolete python-pip
+- name: install docker-ce
   apt:
-    name: python-pip
-    state: absent
-
-- name: install recent pip
-  easy_install:
-    name: pip
+    name: docker-ce
     state: present
-
-- name: install docker-py (docker)
-  pip:
-    name: docker
-    state: present
+    install_recommends: false
+    update_cache: yes
 
 - name: add pi user to the docker group
   user:
